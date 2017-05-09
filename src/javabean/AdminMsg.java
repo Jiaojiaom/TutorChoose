@@ -9,7 +9,7 @@ public class AdminMsg implements java.io.Serializable {
 	private String AdminID; //管理员id
 	private String AdminName; //管理员姓名
 	private String APassword; //管理员密码
-	private String tel; //练习方式
+	private String tel; //联系方式
 	public String getAdminID() {
 		return AdminID;
 	}

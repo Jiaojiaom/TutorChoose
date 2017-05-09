@@ -40,10 +40,21 @@ li{
 			}
 		}
 	</script>
-	<form action="uploadFile" method="post" name="formStu" id="formStu"
-		enctype="multipart/form-data" onsubmit="return validateStu()">
+	<% 
+	if(session.getAttribute("username")==null){
+	%>	
+	<a class="btn btn-primary" href="register.jsp">注册</a>&nbsp; &nbsp;<a class="btn btn-primary" href="login.jsp">登陆</a>
+	<%
+	}else{
+	%>
+	<p>欢迎你， <%=session.getAttribute("username") %>, <a href="logout.jsp">登出</a></p>
+	<%
+	}
+	%>
+	<form action="uploadFile" method="post" name="formTeacher" id="formTeacher"
+		enctype="multipart/form-data"  onsubmit="return validateStu()">
 		<ul>
-			<li>导入学生信息：  <input type="file" name="file"/> <!-- 文件上传组件 --><li>
+			<li>导入学生信息：<input type="file" name="file"/> <!-- 文件上传组件 --></li>
 			<li><input type="submit" name="Submit" value="导入学生信息" /> 
 			    <input type="reset" name="Submit2" value="重置" />
 		    </li>

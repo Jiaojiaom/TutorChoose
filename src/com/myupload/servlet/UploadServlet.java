@@ -93,10 +93,8 @@ public class UploadServlet extends HttpServlet {
 			}
 		}
 		request.setAttribute("result", message); // 将提示信息保存在request对象中
-		RequestDispatcher requestDispatcher=null;
-		if(filename.equals("studentMsg.xls")){
-			requestDispatcher = request.getRequestDispatcher("studentList.jsp"); // 返回学生列表
-		} else if(filename.equals("TeacherMsg.xls")){
+		RequestDispatcher requestDispatcher=request.getRequestDispatcher("studentList.jsp");;
+		if(filename.equals("TeacherMsg.xls")){
 			requestDispatcher = request.getRequestDispatcher("teacherList.jsp"); // 设置教师列表
 		}
 		requestDispatcher.forward(request, response);
