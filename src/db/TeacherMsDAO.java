@@ -7,36 +7,10 @@ import java.util.Map;
 
 import javabean.TeacherMsg;
 
-public class TeacherMsDAO {
-	DBConnection dbCon;
-	
-	public TeacherMsDAO(){
-		dbCon=new DBConnection();//数据库连接对象
-		dbCon.createConnection();
-	}
-	
-	public int insert(String TeacherID,String TeacherName,String DeptID,String Sex,String tel,String Intro){
-		// 插入到数据库
-		String sql = "insert into TB_Teacher(TeacherID, TeacherName, DeptID, Sex,tel,Intro)"
-				+ "values('"+TeacherID+"','"+TeacherName+"','"+DeptID+"','" +Sex+"','"+tel+"','"+Intro+"')";
-		System.out.println(sql);
-		// 更新数据库
-		int i=dbCon.update(sql);
-		return i;
-	}
-	
-	// 从数据库里面选出所有记录
-	public ArrayList<Map<String,String>> queryTeacherAll(){
-		String sql="select * from TB_Teacher";
-		ArrayList<Map<String,String>> list=dbCon.queryForList(sql);
-		return list;
-	}
-	
-	//根据学号查询教师信息
-    public TeacherMsg queryByTeacherId(String teacherId) {
+public class TeacherMsDAO extends MsDAO {
+	// 查询所有教师的信息
+    public TeacherMsg getTeacherMsg(String sql) {
     	TeacherMsg teacherMs = null;
-		String sql = "select * from TB_Teacher where TeacherId='" + teacherId + "'";
-		System.out.println(sql);
 		//将查询结果放到结果集
 		ResultSet rs = dbCon.queryForRS(sql);
 		if (rs != null) {
@@ -60,32 +34,51 @@ public class TeacherMsDAO {
 		}
 		return teacherMs;//返回javaBean
 	}
-
-	//修改用户数据
-	public int updateTeacher(String TeacherID, String TeacherName, String TPassword, String DeptID,  String Sex,
-			              String Title, int studentCount, int Privilege, String tel,String Intro) {
 	
-		String sql = "update TB_Teacher set TeacherName='" + TeacherName + "',TPassword='" + TPassword + "',DeptID='" + DeptID 
+	public int addTeacher(String TeacherID,String TeacherName,String DeptID,String Sex,String tel,String Intro){
+		if(findByTeacherID(TeacherID)!=null){
+			String Title=null, TPassword="123456", Privilege=null;
+			int studentCount=0;
+			sql = "update TB_Teacher set TeacherName='" + TeacherName + "',TPassword='" + TPassword + "',DeptID='" + DeptID 
 		             + "',Sex='" + Sex + "',Title='" + Title + "',studentCount=" + studentCount 
 		             + ",Privilege=" + Privilege+ ",tel='" + tel+ "',Intro='" + Intro 
 		             +"' where TeacherID='" + TeacherID+ "'";
-		
-		System.out.println(sql);
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+		}
+		else {
+			// 插入到数据库
+			sql = "insert into TB_Teacher(TeacherID, TeacherName, DeptID, Sex,tel,Intro)"
+					+ "values('"+TeacherID+"','"+TeacherName+"','"+DeptID+"','" +Sex+"','"+tel+"','"+Intro+"')";
+		}
+		return updateDB(sql);
+	}
+	
+	//根据学号查询教师信息
+    public TeacherMsg findByTeacherID(String teacherId) {
+		sql = "select * from TB_Teacher where TeacherId='" + teacherId + "'";
+		return getTeacherMsg(sql);//返回javaBean
+	}
+    
+	//修改用户数据
+	public int updateByTeacherId(String TeacherID, String TeacherName, String TPassword, String DeptID,  String Sex,
+			              String Title, int studentCount, int Privilege, String tel,String Intro) {
+	
+		sql = "update TB_Teacher set TeacherName='" + TeacherName + "',TPassword='" + TPassword + "',DeptID='" + DeptID 
+		             + "',Sex='" + Sex + "',Title='" + Title + "',studentCount=" + studentCount 
+		             + ",Privilege=" + Privilege+ ",tel='" + tel+ "',Intro='" + Intro 
+		             +"' where TeacherID='" + TeacherID+ "'";
+		return updateDB(sql);
 	}
 	
 	//根据学号删除数据
 	public int deleteByTeacherId(String teacherId) {
-		String sql = "delete from TB_Teacher where TeacherId='" + teacherId + "'";
-		int i = dbCon.update(sql);//更新数据库
-		return i;
-	}
+		sql = "delete from TB_Teacher where TeacherId='" + teacherId + "'";
+		return updateDB(sql);
+	}	
 	
-	//关闭数据库连接
-	public void close() {
-		dbCon.close();
+	// 从数据库里面选出所有记录
+	public ArrayList<Map<String,String>> queryTeacherList(){
+		sql="select * from TB_Teacher";
+		return queryDBForList(sql);
 	}
-	
 }
 

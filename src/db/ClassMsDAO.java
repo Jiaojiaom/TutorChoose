@@ -9,34 +9,10 @@ import java.util.Map;
 import javabean.ClassMsg;
 import javabean.DeptMsg;
 
-public class ClassMsDAO {
-	DBConnection dbCon;
-	
-    public ClassMsDAO(){
-		dbCon=new DBConnection();//数据库连接对象
-		dbCon.createConnection();
-	}
-    
-	public int insert(String ClassID,String ClassName,String DeptID){
-		// 插入到数据库
-		String sql = "insert into TB_Class(ClassID, ClassName, DeptID)"
-				   + "values('"+ClassID+"','"+ClassName+"','"+DeptID+"')";
-		System.out.println(sql);
-		// 更新数据库
-		int i=dbCon.update(sql);
-		return i;
-	}
-	// 从数据库里面选出所有记录
-	public ArrayList<Map<String,String>> queryClassAll(){
-		String sql="select * from TB_Class";
-		ArrayList<Map<String,String>> list=dbCon.queryForList(sql);
-		return list;
-	}
-	// 根据班级编号查询班级信息
-    public ClassMsg queryByName(String classId) {
+public class ClassMsDAO extends MsDAO{
+    // 找出班级的信息
+	public ClassMsg getClassMsg(String sql) {
     	ClassMsg classMsg = null;
-		String sql = "select * from TB_Class where ClassID='" + classId + "'";
-		System.out.println(sql);
 		//将查询结果放到结果集
 		ResultSet rs = dbCon.queryForRS(sql);
 		if (rs != null) {
@@ -53,23 +29,44 @@ public class ClassMsDAO {
 		}
 		return classMsg;//返回javaBean
 	}
-	// 修改系
-	public int updateDept(String classID, String className,String deptId) {
-		String sql = "update TB_Class set className='" + className +"', deptID='" + deptId
+	
+	// 添加班级, 如果存在就更新，不存在就插入
+	public int addClass(String ClassID,String ClassName,String DeptID){
+		if(findOneClass(ClassID)!=null){
+		   // 更新数据
+		   sql = "update TB_Class set ClassName='" + ClassName + "',DeptID='" + DeptID 
+			     +"' where ClassID='" + ClassID+ "'";
+		}else {
+		   // 添加数据
+	 	   sql = "insert into TB_Class(ClassID, ClassName, DeptID)"
+				+ "values('"+ClassID+"','"+ClassName+"','"+DeptID+"')";  
+		}
+		// 更新数据库
+		return updateDB(sql);
+	}
+	
+	// 根据班级编号查询班级信息
+    public ClassMsg findOneClass(String classId) {
+		sql = "select * from TB_Class where ClassID='" + classId + "'";
+		return getClassMsg(sql);//返回javaBean
+	}
+	// 修改班级
+	public int updateByClassID(String classID, String className,String deptId) {
+		sql = "update TB_Class set className='" + className +"', deptID='" + deptId
 				     +"'where classID='" + classID+ "'";
-		System.out.println(sql);
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+		return updateDB(sql);
 	}
-	//根据系删除数据
-	public int deleteById(String classId) {
-		String sql = "delete from TB_Class where classID='" + classId + "'";
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+	
+	//根据班级删除数据
+	public int deleteByClassId(String classId) {
+		sql = "delete from TB_Class where classID='" + classId + "'";
+		return updateDB(sql);
 	}
-	//关闭数据库连接
-	public void close() {
-		dbCon.close();
+	
+	// 从数据库里面选出所有记录
+	public ArrayList<Map<String,String>> queryClassAll(){
+		sql="select * from TB_Class";
+		return queryDBForList(sql);
 	}
 }
 

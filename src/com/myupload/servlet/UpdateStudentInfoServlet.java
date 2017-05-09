@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import db.StuMsDAO;
+import db.StudentMsDAO;
 import db.TeacherMsDAO;
 
 /**
@@ -44,7 +44,7 @@ public class UpdateStudentInfoServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		//以下代码用来获取表单传递过来的数据
 		request.setCharacterEncoding("UTF-8");   
-		StuMsDAO stuDao = new StuMsDAO();
+		StudentMsDAO stuDao = new StudentMsDAO();
 		String stuID = request.getParameter("StuID");
 	    String stuName=request.getParameter("StuName");
 	    String Sex=request.getParameter("Sex");
@@ -61,7 +61,7 @@ public class UpdateStudentInfoServlet extends HttpServlet {
 		String time=String.format("%2d:%02d:%02d", cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND));
 		String selectDate = date+""+time;
 		// 插入到数据库
-        int i = stuDao.updateStudent(stuID,stuName,DeptID,classID,Sex,SPassword,
+        int i = stuDao.updateByStudentID(stuID,stuName,DeptID,classID,Sex,SPassword,
         		                     grade,tel,Intro,teacherId,chooseState, selectDate);
         stuDao.close();
 	    if (i > 0) {

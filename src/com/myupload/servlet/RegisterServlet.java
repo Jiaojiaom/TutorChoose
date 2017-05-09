@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
 	    String adminPassword=request.getParameter("adminPassword");
         // 插入到数据库
 	    int id=1;
-        int i = adminDao.insert(id+"", adminName,adminPassword, "");
+        int i = adminDao.addAdmin(id+"", adminName,adminPassword, "");
         id++;
         adminDao.close();
 	    if (i > 0) {

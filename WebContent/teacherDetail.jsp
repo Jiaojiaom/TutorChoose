@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="db.StuMsDAO" %>
-<%@ page import="javabean.StuMsg" %>
+<%@ page import="db.StudentMsDAO" %>
+<%@ page import="javabean.StudentMsg" %>
 <%@ page import="db.DeptMsDAO" %>
 <%@ page import="db.ClassMsDAO" %>
 <%@ page import="db.TeacherMsDAO" %>
 <%@ page import="javabean.TeacherMsg" %>
-<%@ page import="db.StuMsDAO" %>
+<%@ page import="db.StudentMsDAO" %>
 <%@ page import="db.SelectTeacherDAO" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -38,7 +38,7 @@
 	<%
 	   String teacherid=request.getParameter("teacherid");
 	   TeacherMsDAO teacherDao = new TeacherMsDAO();
-	   TeacherMsg teacherMsg = teacherDao.queryByTeacherId(teacherid);
+	   TeacherMsg teacherMsg = teacherDao.findByTeacherID(teacherid);
        System.out.println(teacherMsg.getIntro());
 	 %>
    	<tr>
@@ -118,17 +118,17 @@
 		<th>选择时间</th>
 	</tr>
 	  <%    
-	    StuMsDAO stuDao = new StuMsDAO();
-		ArrayList<Map<String, String>> stuMsgs = stuDao.queryByTeacherId(teacherid);
+	    StudentMsDAO studentDao = new StudentMsDAO();
+		ArrayList<Map<String, String>> studentMsgs = studentDao.queryStudentByTeacherId(teacherid);
 		int i=0;
-		for (Map<String, String> stuMsg : stuMsgs) {	
+		for (Map<String, String> studentMsg : studentMsgs) {	
 	  %>
 	<tr>
 		<td style="width: 6%;"><%=++i %></td>
-		<td><a href="studentDetail.jsp?stuid=<%=stuMsg.get("stuid") %>"><%=stuMsg.get("stuname") %></a></td>
-		<td><%=stuMsg.get("grade") %></td>
-		<td><%=stuMsg.get("choosedstate") %></td>
-		<td><%=stuMsg.get("selectdate") %></td>
+		<td><a href="studentDetail.jsp?stuid=<%=studentMsg.get("stuid") %>"><%=studentMsg.get("stuname") %></a></td>
+		<td><%=studentMsg.get("grade") %></td>
+		<td><%=studentMsg.get("choosedstate") %></td>
+		<td><%=studentMsg.get("selectdate") %></td>
 	</tr>
 		<%
 		}

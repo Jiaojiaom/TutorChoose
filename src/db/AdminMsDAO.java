@@ -3,41 +3,14 @@ package db;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
 
 import javabean.AdminMsg;
-import javabean.ClassMsg;
 
-public class AdminMsDAO {
-	DBConnection dbCon;
-	
-    public AdminMsDAO(){
-		dbCon=new DBConnection();//数据库连接对象
-		dbCon.createConnection();
-	}
-    
-    // 插入数据
-	public int insert(String AdminID,String AdminName,String APassword,String tel){
-		// 插入到数据库
-		String sql = "insert into TB_Admin(AdminID, AdminName, APassword,tel)"
-				+ "values('"+AdminID+"','"+AdminName+"','"+APassword+"','"+tel+"')";
-		System.out.println(sql);
-		// 更新数据库
-		int i=dbCon.update(sql);
-		return i;
-	}
-		
-	// 从数据库里面选出所有记录
-	public ArrayList<Map<String,String>> queryAll(){
-		String sql="select * from TB_Admin";
-		ArrayList<Map<String,String>> list=dbCon.queryForList(sql);
-		return list;
-	}
-	// 根据班级编号查询班级信息
-    public AdminMsg queryByAdminId(String adminId) {
+public class AdminMsDAO extends MsDAO {
+    // 查询得到详细信息
+    public AdminMsg getAdminMsg(String sql) {
     	AdminMsg adminMsg = null;
-		String sql = "select * from TB_Admin where AdminID='" + adminId + "'";
 		//将查询结果放到结果集
 		ResultSet rs = dbCon.queryForRS(sql);
 		if (rs != null) {
@@ -47,6 +20,7 @@ public class AdminMsDAO {
 					adminMsg.setAdminID(rs.getString("AdminID"));
 					adminMsg.setAdminName(rs.getString("AdminName"));
 					adminMsg.setAPassword(rs.getString("APassword"));
+					adminMsg.setTel(rs.getString("Tel"));
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -55,16 +29,50 @@ public class AdminMsDAO {
 		return adminMsg;//返回javaBean
 	}
     
-	//删除管理员数据
-	public int deleteById(String adminId) {
-		String sql = "delete from TB_Admin where adminID='" + adminId + "'";
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+    // 添加管理员, 如果存在就更新，不存在就插入
+	public int addAdmin(String AdminID,String AdminName,String APassword,String tel){
+		if(findOneAdmin(AdminID)!=null){
+		   // 更新数据
+		   sql = "update TB_Admin set AdminName='" + AdminName + "',APassword='" + APassword 
+				     + "',tel='" + tel +"' where AdminID='" + AdminID+ "'";
+		}else {
+		   // 添加数据
+	 	   sql = "insert into TB_Admin(AdminID, AdminName, APassword,tel)"
+				+ "values('"+AdminID+"','"+AdminName+"','"+APassword+"','"+tel+"')";  
+		}
+		// 更新数据库
+		return updateDB(sql);
 	}
 	
-	// 关闭数据库连接
-	public void close() {
-		dbCon.close();
+	// 查找是否存在这个用户
+	public AdminMsg findOneAdmin(String adminId) {
+		sql = "select * from TB_Admin where AdminID='" + adminId + "'";
+		return getAdminMsg(sql);//返回javaBean
+	}
+	
+	// 按照管理员编号查询
+    public AdminMsg findByAdminId(String adminId) {
+		sql = "select * from TB_Admin where AdminID='" + adminId + "'";
+		return getAdminMsg(sql);//返回javaBean
+	}
+	
+	// 修改用户数据
+	public int updateByAdminId(String AdminID,String AdminName,String APassword,String tel) {
+		sql = "update TB_Admin set AdminName='" + AdminName + "',APassword='" + APassword 
+				     + "',tel='" + tel +"' where AdminID='" + AdminID+ "'";
+		return updateDB(sql);
+	}
+    
+	//删除管理员数据
+	public int deleteByAdminId(String adminId) {
+		sql = "delete from TB_Admin where adminID='" + adminId + "'";
+		return updateDB(sql);
+	}
+	
+	// 选出所有的TB_Admin表的数据
+	public ArrayList<Map<String,String>> queryAdminList(){
+		sql="select * from TB_Admin";
+		return queryDBForList(sql);
 	}
 }
 

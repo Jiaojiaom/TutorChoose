@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="java.net.URLEncoder"%>
 <%@ page import="java.util.*"%>
-<%@ page import="db.StuMsDAO" %>
+<%@ page import="db.StudentMsDAO" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -82,27 +82,27 @@
 			<th>删除</th>
 		</tr>
 		<%
-		    StuMsDAO stuDao = new StuMsDAO();
-			ArrayList<Map<String, String>> stuMsgs = stuDao.queryStudentAll();
+		    StudentMsDAO studentDao = new StudentMsDAO();
+			ArrayList<Map<String, String>> studentMsgs = studentDao.queryStudentList();
 			int i=0;
-			for (Map<String, String> stuMsg : stuMsgs) {	
+			for (Map<String, String> studentMsg : studentMsgs) {	
 			%>
 		<tr>
 			<td style="width: 6%;"><%=++i %></td>
-			<td><%=stuMsg.get("stuid") %></td>
-			<td><a href="studentDetail.jsp?stuid=<%=stuMsg.get("stuid") %>"><%=stuMsg.get("stuname")%></a></td>
-			<td><%=stuMsg.get("deptid") %></td>
-			<td><%=stuMsg.get("classid") %></td>
-			<td><%=stuMsg.get("sex") %></td>
-			<td><%=stuMsg.get("spassword") %></td>
-			<td><%=stuMsg.get("grade") %></td>
-			<td><%=stuMsg.get("tel") %></td>
-			<td><%=stuMsg.get("intro") %></td>
-			<td><%=stuMsg.get("teacherid") %></td>
-			<td><%=stuMsg.get("choosedstate") %></td>
-			<td><%=stuMsg.get("selectdate") %></td>
-			<td><a href="editStuInfo.jsp?stuid=<%=stuMsg.get("stuid") %>">编辑</a></td>
-		    <td><a href="deleteStuInfo.jsp?stuid=<%=stuMsg.get("stuid") %>">删除</a></td>
+			<td><%=studentMsg.get("stuid") %></td>
+			<td><a href="studentDetail.jsp?stuid=<%=studentMsg.get("stuid") %>"><%=studentMsg.get("stuname")%></a></td>
+			<td><%=studentMsg.get("deptid") %></td>
+			<td><%=studentMsg.get("classid") %></td>
+			<td><%=studentMsg.get("sex") %></td>
+			<td><%=studentMsg.get("spassword") %></td>
+			<td><%=studentMsg.get("grade") %></td>
+			<td><%=studentMsg.get("tel") %></td>
+			<td><%=studentMsg.get("intro") %></td>
+			<td><%=studentMsg.get("teacherid") %></td>
+			<td><%=studentMsg.get("choosedstate") %></td>
+			<td><%=studentMsg.get("selectdate") %></td>
+			<td><a href="editStuInfo.jsp?stuid=<%=studentMsg.get("stuid") %>">编辑</a></td>
+		    <td><a href="deleteStuInfo.jsp?stuid=<%=studentMsg.get("stuid") %>">删除</a></td>
 		</tr>
 			<%
 			}

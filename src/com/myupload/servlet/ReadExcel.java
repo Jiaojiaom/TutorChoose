@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import db.ClassMsDAO;
 import db.DeptMsDAO;
-import db.StuMsDAO;
+import db.StudentMsDAO;
 import db.TeacherMsDAO;
 import jxl.Cell;
 import jxl.Sheet;
@@ -42,7 +42,7 @@ public class ReadExcel {
    
    // 导入学生信息
    public static void importStuMsg(Sheet sheet,int rows) {
-	   StuMsDAO stuDao=new StuMsDAO();
+	   StudentMsDAO stuDao=new StudentMsDAO();
 	   for(int i=0;i<rows;i++) {
 		   String StuID=sheet.getCell(0,i).getContents();
 		   String StuName=sheet.getCell(1,i).getContents();
@@ -50,11 +50,11 @@ public class ReadExcel {
 		   String ClassID=sheet.getCell(3,i).getContents();
 	       String Sex=sheet.getCell(4,i).getContents();
 	       String SPassword=sheet.getCell(5,i).getContents();
-	       Double Grade=Double.parseDouble(sheet.getCell(6,i).getContents());
+	       Float Grade=Float.parseFloat(sheet.getCell(6,i).getContents());
 	       String tel=sheet.getCell(7,i).getContents();
 	       String Intro=sheet.getCell(8,i).getContents();
 	       // 插入到数据库
-		   stuDao.insert(StuID,StuName,DeptID,ClassID,Sex,SPassword,Grade,tel,Intro);
+		   stuDao.addStudent(StuID,StuName,DeptID,ClassID,Sex,SPassword,Grade,tel,Intro);
 	   }
 	   stuDao.close();
    }
@@ -70,7 +70,7 @@ public class ReadExcel {
 	       String tel=sheet.getCell(8,i).getContents();
 	       String Intro=sheet.getCell(9,i).getContents();
 	       // 插入到数据库
-	       teacherDao.insert(TeacherID,TeacherName,DeptID,Sex,tel,Intro);
+	       teacherDao.addTeacher(TeacherID,TeacherName,DeptID,Sex,tel,Intro);
 	   }
 	   teacherDao.close();
    }
@@ -82,7 +82,7 @@ public class ReadExcel {
 		   String DeptID=sheet.getCell(0,i).getContents();
 		   String DeptName=sheet.getCell(1,i).getContents();
 	       // 插入到数据库
-		   deptDao.insert(DeptID,DeptName);
+		   deptDao.addDept(DeptID,DeptName);
 	   }
 	   deptDao.close();
    }
@@ -95,7 +95,7 @@ public class ReadExcel {
 		   String ClassName=sheet.getCell(1,i).getContents();
 		   String DeptID=sheet.getCell(2,i).getContents();
 	       // 插入到数据库
-		   classDao.insert(ClassID,ClassName,DeptID);
+		   classDao.addClass(ClassID,ClassName,DeptID);
 	   }
 	   classDao.close();
    }

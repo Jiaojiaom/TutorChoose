@@ -46,7 +46,7 @@
 	var k=0;
 	<%   
 	TeacherMsDAO teacherDao = new TeacherMsDAO();
-	ArrayList<Map<String, String>> teacherMsgs = teacherDao.queryTeacherAll();
+	ArrayList<Map<String, String>> teacherMsgs = teacherDao.queryTeacherList();
 	for (Map<String, String> teacherMsg : teacherMsgs) {
 		String  editTeacher = "<a href='editTeacherInfo.jsp?teacherid="+teacherMsg.get("teacherid")+"'>编辑</a>";
 		String  deleteTeacher = "<a href='deleteTeacherInfo.jsp?teacherid="+teacherMsg.get("teacherid")+"'>删除</a>";

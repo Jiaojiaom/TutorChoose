@@ -1,11 +1,11 @@
 package javabean;
 
-public class StuMsg implements java.io.Serializable {
+public class StudentMsg implements java.io.Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public StuMsg() {};
+	public StudentMsg() {};
 	private String StuID; //Ñ§ºÅ
 	private String StuName; //ÐÕÃû
 	private String DeptID; //Ïµ

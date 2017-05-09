@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 	    System.out.println(adminId+aPassword);
         // 插入到数据库
 	    int id=1;
-        AdminMsg adminMsg = adminDao.queryByAdminId(adminId);
+        AdminMsg adminMsg = adminDao.findByAdminId(adminId);
         id++;
         adminDao.close();
         if(adminMsg==null){

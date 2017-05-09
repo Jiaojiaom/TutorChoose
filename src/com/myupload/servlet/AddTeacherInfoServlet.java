@@ -54,7 +54,7 @@ public class AddTeacherInfoServlet extends HttpServlet {
         String tel=request.getParameter("tel");
         String Intro=request.getParameter("Intro");
         // 插入到数据库
-        int i = teacherDao.insert(TeacherID,TeacherName,TPassword,DeptID,Sex,Title);
+        int i = teacherDao.addTeacher(TeacherID,TeacherName,TPassword,DeptID,Sex,Title);
         teacherDao.close();
 	    if (i > 0) {
 	    	System.out.println("成功插入老师"+teacherDao+"的数据");

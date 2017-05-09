@@ -9,36 +9,10 @@ import java.util.Map;
 import javabean.DeptMsg;
 import javabean.SelectTeacherMsg;
 
-public class DeptMsDAO {
-	DBConnection dbCon;
-		
-    public DeptMsDAO(){
-		dbCon=new DBConnection();//数据库连接对象
-		dbCon.createConnection();
-	}
-    
-	public int insert(String DeptID,String DeptName){
-		// 插入到数据库
-		String sql = "insert into TB_Dept(DeptID, DeptName)"
-				   + "values('"+DeptID+"','"+DeptName+"')";
-		System.out.println(sql);
-		// 更新数据库
-		int i=dbCon.update(sql);
-		return i;
-	}
-	
-	// 从数据库里面选出所有记录
-	public ArrayList<Map<String,String>> queryDeptAll(){
-		String sql="select * from TB_Dept";
-		ArrayList<Map<String,String>> list=dbCon.queryForList(sql);
-		return list;
-	}
-	
-	//根据系查询教师信息
-    public DeptMsg queryByName(String deptId) {
-    	DeptMsg deptMsg = null;
-		String sql = "select * from TB_Dept where DeptID='" + deptId + "'";
-		System.out.println(sql);
+public class DeptMsDAO extends MsDAO {
+	// 查询得到详细信息
+    public DeptMsg getDeptMsg(String sql) {	
+		DeptMsg deptMsg = null;
 		//将查询结果放到结果集
 		ResultSet rs = dbCon.queryForRS(sql);
 		if (rs != null) {
@@ -54,24 +28,50 @@ public class DeptMsDAO {
 		}
 		return deptMsg;//返回javaBean
 	}
-	//修改系
-	public int updateDept(String deptID, String deptName) {
-		String sql = "update TB_SelectTeacher set DeptName='" + deptName +"'where TeacherID='" + deptID+ "'";
-		System.out.println(sql);
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+    
+    // 添加系, 如果存在就更新，不存在就插入
+   	public int addDept(String deptID, String deptName){
+   		if(findOneDept(deptID)!=null){
+   		   // 更新数据
+   		   sql = "update TB_Dept set DeptName='" + deptName + "' where DeptID='" + deptID+ "'";
+   		}else {
+   		   // 添加数据
+   	 	   sql = "insert into TB_Dept(DeptID, DeptName)"
+   				+ "values('"+deptID+"','"+deptName+"')";  
+   		}
+   		// 更新数据库
+   		return updateDB(sql);
+   	}
+   	
+	// 查找是否存在这个用户
+	public DeptMsg findOneDept(String deptId) {
+		sql = "select * from TB_Dept where DeptID='" + deptId + "'";
+		return getDeptMsg(sql);//返回javaBean
+	}
+
+	// 根据系查询系的信息
+    public DeptMsg findByDeptID(String deptId) {
+		sql = "select * from TB_Dept where DeptID='" + deptId + "'";
+		return getDeptMsg(deptId);//返回javaBean
+	}
+	
+    // 修改系
+	public int updateByDeptId(String deptID, String deptName) {
+		sql = "update TB_SelectTeacher set DeptName='" + deptName +"'where TeacherID='" + deptID+ "'";
+		return updateDB(sql);
 	}
 	
 	//根据系删除数据
-	public int deleteById(String deptId) {
+	public int deleteByDeptId(String deptId) {
 		String sql = "delete from TB_Dept where DeptID='" + deptId + "'";
-		int i = dbCon.update(sql);//更新数据库
-		return i;
+		return updateDB(sql);
 	}
 	
-	//关闭数据库连接
-	public void close() {
-		dbCon.close();
+	// 从数据库里面选出所有记录
+	public ArrayList<Map<String,String>> queryDeptAll(){
+		sql="select * from TB_Dept";
+		return queryDBForList(sql);
 	}
+
 }
 

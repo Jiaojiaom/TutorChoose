@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="db.StuMsDAO" %>
-<%@ page import="javabean.StuMsg" %>
+<%@ page import="db.StudentMsDAO" %>
+<%@ page import="javabean.StudentMsg" %>
 <%@ page import="db.DeptMsDAO" %>
 <%@ page import="db.ClassMsDAO" %>
 <%@ page import="db.TeacherMsDAO" %>
@@ -35,8 +35,8 @@
 	</tr>
 	<%
 	   String stuid=request.getParameter("stuid");
-	   StuMsDAO stuDao = new StuMsDAO();
-       StuMsg stuMsg = stuDao.queryByStuId(stuid);
+	   StudentMsDAO studentDao = new StudentMsDAO();
+       StudentMsg stuMsg = studentDao.findByStudentId(stuid);
        System.out.println(stuMsg.getIntro());
 	 %>
    	<tr>

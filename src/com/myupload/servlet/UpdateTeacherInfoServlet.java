@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import db.StuMsDAO;
+import db.StudentMsDAO;
 import db.TeacherMsDAO;
 
 /**
@@ -61,7 +61,7 @@ public class UpdateTeacherInfoServlet extends HttpServlet {
         System.out.println(TPassword+""+Title);
         System.out.println(tel+""+Intro);
         // 插入到数据库
-        int i = teacherDao.updateTeacher(TeacherID,TeacherName,TPassword,DeptID,Sex,Title,studentCount,Privilege,tel,Intro);
+        int i = teacherDao.updateByTeacherId(TeacherID,TeacherName,TPassword,DeptID,Sex,Title,studentCount,Privilege,tel,Intro);
         teacherDao.close();
 	    if (i > 0) {
 	    	System.out.println("成功修改教师"+TeacherName+"的信息");
