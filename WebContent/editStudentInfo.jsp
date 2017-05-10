@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="db.StuMsDAO" %>
-<%@ page import="javabean.StuMsg" %>
+<%@ page import="db.StudentMsDAO" %>
+<%@ page import="javabean.StudentMsg" %>
 <%@ page import="db.DeptMsDAO" %>
 <%@ page import="db.ClassMsDAO" %>
 <%@ page import="db.TeacherMsDAO" %>
@@ -35,23 +35,24 @@
 	</tr>
 	<%
 	   String stuid=request.getParameter("stuid");
-	   StuMsDAO stuDao = new StuMsDAO();
-       StuMsg stuMsg = stuDao.queryByStuId(stuid);
-       System.out.println(stuMsg.getIntro());
+	   StudentMsDAO studentDao = new StudentMsDAO();
+       StudentMsg studentMsg = studentDao.findByStudentId(stuid);
+       studentDao.close();
 	 %>
-    <form id="form1" name="form1" method="post" action="updateStudentInfo">
+    <form id="form1" name="form1" method="post" action="updateInfo">
+        <input name="userType" type="hidden" value="student" /> 
     	<tr>
-		    <td class="subtitle">学号： </td>
-		     <td><input name="StuID" type="text" id="StuID" value=<%=stuMsg.getStuID()%>></td>
+		    <td class="subtitle">学号:</td>
+		     <td><input name="StuID" type="text" id="StuID" value=<%=studentMsg.getStuID()%>></td>
 		</tr>
     	<tr>
 		    <td class="subtitle">姓名： </td>
-		    <td><input name="StuName" type="text" id="StuName" value=<%=stuMsg.getStuName()%>></td>
+		    <td><input name="StuName" type="text" id="StuName" value=<%=studentMsg.getStuName()%>></td>
 		</tr>
 		<tr>
 		    <td class="subtitle">系： </td>
 		    <td>
-		       <select name="DeptID" id="DeptID" value=<%=stuMsg.getDeptID()%>>
+		       <select name="DeptID" id="DeptID" value=<%=studentMsg.getDeptID()%>>
 		      <%
 			    DeptMsDAO deptDao = new DeptMsDAO();
 				ArrayList<Map<String, String>> deptMsgs = deptDao.queryDeptAll();
@@ -68,7 +69,7 @@
 		<tr>
 		    <td class="subtitle">班级： </td>
 		    <td>
-		       <select name="ClassID" id="ClassID" value=<%=stuMsg.getClassID()%>>
+		       <select name="ClassID" id="ClassID" value=<%=studentMsg.getClassID()%>>
 		      <%
 			    ClassMsDAO classDao = new ClassMsDAO();
 				ArrayList<Map<String, String>> classMsgs = classDao.queryClassAll();
@@ -84,45 +85,39 @@
 		</tr>
 		<tr>
 		    <td class="subtitle">密码： </td>
-		    <td><input name="SPassword" type="password" id="SPassword" value=<%=stuMsg.getSPassword()%>></td>
+		    <td><input name="SPassword" type="password" id="SPassword" value=<%=studentMsg.getSPassword() %>></td>
 		</tr>
 		<tr>
 		    <td class="subtitle">性别： </td>
 		    <td> 
-		      <%
-			    if(stuMsg.getSex().equals("F")){
-			  %>
+		      <% if(studentMsg.getSex().equals("F")){ %> 
 			    <input type="radio" name="Sex" value="M">男
 			    <input type="radio" name="Sex" value="F" checked>女
-			  <%
-			    } else {
-		      %>
+			  <% } else { %>
 		        <input type="radio" name="Sex" value="F" checked>男
 			    <input type="radio" name="Sex" value="M">女
-		      <%
-			    } 
-		      %>
+		      <% } %>
             </td>
 		</tr>
 		<tr>
 		    <td class="subtitle">绩点: </td>
-		    <td><input name="Grade" type="text" id="Grade" value=<%=stuMsg.getGrade()%>></td>
+		    <td><input name="Grade" type="text" id="Grade" value=<%=studentMsg.getGrade()%>></td>
 		</tr>
 		<tr>
 		    <td class="subtitle">电话: </td>
-		    <td><input name="tel" type="text" id="tel" value=<%=stuMsg.getTel()%>></td>
+		    <td><input name="tel" type="text" id="tel" value=<%=studentMsg.getTel()%>></td>
 		</tr>
 		<tr>
 		    <td class="subtitle">自我介绍： </td>
-		    <td><textarea name="Intro" rows="3" cols="20"><%=stuMsg.getIntro()%></textarea></br></td>
+		    <td><textarea name="Intro" rows="3" cols="20"><%=studentMsg.getIntro()%></textarea></br></td>
 		</tr>
 		<tr>
 		    <td class="subtitle">导师编号：  </td>
 		    <td>
-		     <select name="TeacherID" id="TeacherID" value=<%=stuMsg.getTeacherID()%>>
+		     <select name="TeacherID" id="TeacherID" value=<%=studentMsg.getTeacherID()%>>
 		      <%
 			    TeacherMsDAO teacherDao = new TeacherMsDAO();
-				ArrayList<Map<String, String>> teacherMsgs = teacherDao.queryTeacherAll();
+				ArrayList<Map<String, String>> teacherMsgs = teacherDao.queryTeacherList();
 				for (Map<String, String> teacherMsg : teacherMsgs) {	
 			  %>
 			     <option value =<%=teacherMsg.get("teachername") %>><%=teacherMsg.get("teachername") %></option>
@@ -137,7 +132,7 @@
 		    <td class="subtitle">状态： </td>
 		    <td> 
 			    <%
-				    if(stuMsg.getChoosedState()==0){
+				    if(studentMsg.getChoosedState()==0){
 				%>
 				    <input type="radio" name="ChooseState" value=0 checked>未选
 				    <input type="radio" name="ChooseState" value=1 >待定
@@ -157,7 +152,7 @@
 		</tr>
 		<tr>
 		    <td class="subtitle">选择时间：  </td>
-		    <td><input name="SelectDate" rows="3" cols="20" value=<%=stuMsg.getSelectDate()%>></br></td>
+		    <td><input name="SelectDate" rows="3" cols="20" value=<%=studentMsg.getSelectDate()%>></br></td>
 		</tr>
 		<tr>
 		  <td align="center"><input type="submit" name="submit" value="保存修改" float="right"></td>

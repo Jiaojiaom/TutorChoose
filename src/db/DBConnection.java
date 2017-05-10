@@ -64,7 +64,7 @@ public class DBConnection {
 		
 		try {
 			con=DriverManager.getConnection(url,username,password);
-			System.out.println("成功建立连接");
+//			System.out.println("成功建立连接");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -128,7 +128,7 @@ public class DBConnection {
 			if(rs!=null) rs.close();
 			if(stmt!=null) stmt.close();
 			if(con!=null) con.close();
-			System.out.println("成功关闭连接");
+//			System.out.println("成功关闭连接");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

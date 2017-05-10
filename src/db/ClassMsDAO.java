@@ -51,7 +51,7 @@ public class ClassMsDAO extends MsDAO{
 		return getClassMsg(sql);//·µ»ØjavaBean
 	}
 	// ÐÞ¸Ä°à¼¶
-	public int updateByClassID(String classID, String className,String deptId) {
+	public int updateByClassId(String classID, String className,String deptId) {
 		sql = "update TB_Class set className='" + className +"', deptID='" + deptId
 				     +"'where classID='" + classID+ "'";
 		return updateDB(sql);

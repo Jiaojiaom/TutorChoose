@@ -5,7 +5,7 @@
 <%@ page import="javabean.TeacherMsg" %>
 <%@ page import="db.DeptMsDAO" %>
 <%@ page import="db.ClassMsDAO" %>
-<%@ page import="db.StuMsDAO" %>
+<%@ page import="db.StudentMsDAO" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -36,11 +36,11 @@
 	<%
 	   String teacherid=request.getParameter("teacherid");
 	   TeacherMsDAO teacherDao = new TeacherMsDAO();
-       TeacherMsg teacherMsg = teacherDao.queryByTeacherId(teacherid);
+       TeacherMsg teacherMsg = teacherDao.findByTeacherID(teacherid);
 	 %>
-    <form id="form1" name="form1" method="post" action="updateTeacherInfo">
+    <form id="form1" name="form1" method="post" action="updateInfo">
     	<tr>
-		    <td class="subtitle">工号： </td>
+		    <td class="subtitle">工号： <input name="userType" type="hidden" value="teacher" /></td>
 		     <td><input name="TeacherID" type="text" id="TeacherID" value=<%=teacherMsg.getTeacherID()%>></td>
 		</tr>
     	<tr>

@@ -10,12 +10,12 @@
 <body>
 	<form class="g-form" action="login" method="post">
 	    <h2>登陆页面</h2>
-        <input type="text" placeholder="UserName" name="adminId">
-        <input type="password" placeholder="password" name="adminPassword">
+        <input type="text" placeholder="UserName" name="userId">
+        <input type="password" placeholder="password" name="userPwd">
         <div>
-        	<input type="radio" class="radio"> 学生
-        	<input type="radio" class="radio"> 教师
-        	<input type="radio" class="radio"> 管理员
+        	<input type="radio" class="radio" name="userType" value="studentLogin" checked> 学生
+        	<input type="radio" class="radio" name="userType" value="teacherLogin"> 教师
+        	<input type="radio" class="radio" name="userType" value="adminLogin"> 管理员
         </div>
         <input type="submit" value="登录" class="submit">
     </form>
