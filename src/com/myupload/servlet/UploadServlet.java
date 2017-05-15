@@ -93,8 +93,8 @@ public class UploadServlet extends HttpServlet {
 			}
 		}
 		request.setAttribute("result", message); // 将提示信息保存在request对象中
-		RequestDispatcher requestDispatcher=request.getRequestDispatcher("dataList.jsp");;
-		requestDispatcher.forward(request, response);
+		System.out.println("插入");
+    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 	}
 
 	public void init() throws ServletException {

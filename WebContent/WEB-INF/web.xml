@@ -15,7 +15,15 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>
-    <url-pattern>/uploadFile</url-pattern>
+    <url-pattern>/admin/uploadFile</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ExportServlet</servlet-name>
+    <servlet-class>com.myupload.servlet.ExportServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExportServlet</servlet-name>
+    <url-pattern>/admin/exportData</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
@@ -23,7 +31,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/login</url-pattern>
+    <url-pattern>/userLogin/login</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>AddInfoServlet</servlet-name>
@@ -31,7 +39,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>AddInfoServlet</servlet-name>
-    <url-pattern>/addInfo</url-pattern>
+    <url-pattern>/admin/addInfo</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>UpdateInfoServlet</servlet-name>
@@ -39,6 +47,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>UpdateInfoServlet</servlet-name>
-    <url-pattern>/updateInfo</url-pattern>
+    <url-pattern>/admin/updateInfo</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>登陆页面</title>
-<link rel="stylesheet" type="text/css" href="lib/common.css">
+<link rel="stylesheet" type="text/css" href="../lib/common.css">
 </head>
 <body>
 	<form class="g-form" action="login" method="post">

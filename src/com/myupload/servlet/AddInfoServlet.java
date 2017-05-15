@@ -53,15 +53,16 @@ public class AddInfoServlet extends HttpServlet {
 				String TeacherID = request.getParameter("TeacherID");
 			    String TeacherName=request.getParameter("TeacherName");
 			    String Sex=request.getParameter("Sex");
+			    String Title=request.getParameter("Title");
 			    String DeptID=request.getParameter("DeptID");
 		        String tel=request.getParameter("tel");
 		        String Intro=request.getParameter("Intro");
 		        // 插入到数据库
-		        int i = teacherDao.addTeacher(TeacherID,TeacherName,DeptID,Sex,tel,Intro);
+		        int i = teacherDao.addTeacher(TeacherID,TeacherName,DeptID,Sex,Title,tel,Intro);
 		        teacherDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改教师"+TeacherName+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -74,16 +75,15 @@ public class AddInfoServlet extends HttpServlet {
 			    DeptID=request.getParameter("DeptID");
 			    String ClassID=request.getParameter("ClassID");
 		        Sex=request.getParameter("Sex");
-		        String SPassword=request.getParameter("SPassword");
 		        float Grade=Float.parseFloat(request.getParameter("Grade"));
 		        tel=request.getParameter("tel");
 		        Intro=request.getParameter("Intro");
 		        // 插入到数据库
-		        i = stuDao.addStudent(StuID,StuName,DeptID,ClassID,Sex,SPassword,Grade,tel,Intro);
+		        i = stuDao.addStudent(StuID,StuName,DeptID,ClassID,Sex,Grade,tel,Intro);
 		        stuDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功插入学生"+StuName+"的数据");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -98,7 +98,7 @@ public class AddInfoServlet extends HttpServlet {
 		        deptDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改系"+deptName+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -114,7 +114,7 @@ public class AddInfoServlet extends HttpServlet {
 		        classDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改班级"+className+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");

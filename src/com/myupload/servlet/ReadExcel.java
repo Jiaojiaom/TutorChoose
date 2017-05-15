@@ -22,6 +22,7 @@ public class ReadExcel {
 		   Sheet sheet = book.getSheet(0);
 		   // 取得行数
 		   int rows = sheet.getRows();
+		   System.out.println(type);
 		   if(type=="stuExcel"){
 			   importStuMsg(sheet, rows);
 		   } else if(type=="teacherExcel"){
@@ -43,34 +44,35 @@ public class ReadExcel {
    // 导入学生信息
    public static void importStuMsg(Sheet sheet,int rows) {
 	   StudentMsDAO stuDao=new StudentMsDAO();
-	   for(int i=0;i<rows;i++) {
+	   for(int i=1;i<rows;i++) {
 		   String StuID=sheet.getCell(0,i).getContents();
 		   String StuName=sheet.getCell(1,i).getContents();
 		   String DeptID=sheet.getCell(2,i).getContents();
 		   String ClassID=sheet.getCell(3,i).getContents();
 	       String Sex=sheet.getCell(4,i).getContents();
-	       String SPassword=sheet.getCell(5,i).getContents();
 	       Float Grade=Float.parseFloat(sheet.getCell(6,i).getContents());
 	       String tel=sheet.getCell(7,i).getContents();
 	       String Intro=sheet.getCell(8,i).getContents();
 	       // 插入到数据库
-		   stuDao.addStudent(StuID,StuName,DeptID,ClassID,Sex,SPassword,Grade,tel,Intro);
+		   stuDao.addStudent(StuID,StuName,DeptID,ClassID,Sex,Grade,tel,Intro);
 	   }
 	   stuDao.close();
    }
    
-   //导入教师信息
+   // 导入教师信息
    public static void importTeacherMsg(Sheet sheet,int rows) {
 	   TeacherMsDAO teacherDao=new TeacherMsDAO();
-	   for(int i=0;i<rows;i++) {
+	   for(int i=1;i<rows;i++) {
 		   String TeacherID=sheet.getCell(0,i).getContents();
 		   String TeacherName=sheet.getCell(1,i).getContents();
 	       String DeptID=sheet.getCell(3,i).getContents();
 	       String Sex=sheet.getCell(4,i).getContents();
+	       String title=sheet.getCell(5,i).getContents();
 	       String tel=sheet.getCell(8,i).getContents();
 	       String Intro=sheet.getCell(9,i).getContents();
 	       // 插入到数据库
-	       teacherDao.addTeacher(TeacherID,TeacherName,DeptID,Sex,tel,Intro);
+	       System.out.println(TeacherID+TeacherName+DeptID+Sex+tel+Intro);
+	       teacherDao.addTeacher(TeacherID,TeacherName,DeptID,Sex,title,tel,Intro);
 	   }
 	   teacherDao.close();
    }
@@ -78,7 +80,7 @@ public class ReadExcel {
    // 导入班级信息
    public static void importDeptMsg(Sheet sheet,int rows) {
 	   DeptMsDAO deptDao=new DeptMsDAO();
-	   for(int i=0;i<rows;i++) {
+	   for(int i=1;i<rows;i++) {
 		   String DeptID=sheet.getCell(0,i).getContents();
 		   String DeptName=sheet.getCell(1,i).getContents();
 	       // 插入到数据库
@@ -90,7 +92,7 @@ public class ReadExcel {
    // 导入系信息
    public static void importClassMsg(Sheet sheet,int rows) {
 	   ClassMsDAO classDao=new ClassMsDAO();
-	   for(int i=0;i<rows;i++) {
+	   for(int i=1;i<rows;i++) {
 		   String ClassID=sheet.getCell(0,i).getContents();
 		   String ClassName=sheet.getCell(1,i).getContents();
 		   String DeptID=sheet.getCell(2,i).getContents();

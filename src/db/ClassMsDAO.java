@@ -39,8 +39,9 @@ public class ClassMsDAO extends MsDAO{
 		}else {
 		   // 添加数据
 	 	   sql = "insert into TB_Class(ClassID, ClassName, DeptID)"
-				+ "values('"+ClassID+"','"+ClassName+"','"+DeptID+"')";  
+	 			  + "values('"+ClassID+"','"+ClassName+"','"+DeptID+"')";  
 		}
+		System.out.println(sql);
 		// 更新数据库
 		return updateDB(sql);
 	}

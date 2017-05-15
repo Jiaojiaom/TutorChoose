@@ -27,7 +27,9 @@ public class StudentMsDAO extends MsDAO{
 					stuMs.setIntro(rs.getString("Intro"));
 					stuMs.setTeacherID(rs.getString("TeacherID"));
 					stuMs.setChoosedState(Integer.parseInt(rs.getString("choosedState")));
-					stuMs.setSelectDate(rs.getString("selectDate"));	
+					stuMs.setSelectDate(rs.getString("selectDate"));
+					System.out.println(stuMs.getStuName());
+					System.out.println(stuMs.getSPassword());
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -37,19 +39,16 @@ public class StudentMsDAO extends MsDAO{
 	}
     
 	public int addStudent(String StuID,String StuName,String DeptID,String ClassID,
-			              String Sex,String SPassword,float Grade,String tel,String Intro){
+			              String Sex,float Grade,String tel,String Intro){
 		if(findOneStudent(StuID)!=null){
-			String teacherID=null, selectDate=null;
-			int choosedState =0;
-			
-			sql = "update TB_Student set StuName='" + StuName + "',DeptId='" + DeptID + "',ClassId='" + ClassID 
-		             + "',sex='" + Sex + "',spassword='" + SPassword + "',grade=" + Grade + ",intro='" + Intro + "',tel='" + tel
-		             + "',teacherID='" + teacherID+ "',choosedState=" + choosedState+ ",selectDate='" + selectDate 
-		             +"' where StuID='" + StuID+ "'";
+			sql = "update TB_Student set StuName='" + StuName + "',DeptId='" + DeptID 
+					 + "',ClassId='" + ClassID + "',Sex='" + Sex + "',Grade=" + Grade 
+					 + ",Intro='" + Intro + "',tel='" + tel
+		             + "' where StuID='" + StuID+ "'";
 		} else {
 			// 插入到数据库
-			sql = "insert into TB_Student(StuID, StuName, DeptID, ClassID,Sex,SPassword,Grade,tel,Intro)"
-					+ "values('"+StuID+"','"+StuName+"','"+DeptID+"','"+ClassID+"','"+Sex+"','"+SPassword+"',"+Grade+",'"+tel+"','"+Intro+"')";
+			sql = "insert into TB_Student(StuID, StuName, DeptID, ClassID,Sex,Grade,tel,Intro)"
+					+ "values('"+StuID+"','"+StuName+"','"+DeptID+"','"+ClassID+"','"+Sex+"',"+Grade+",'"+tel+"','"+Intro+"')";
 		}
 		System.out.println(sql);
 		return updateDB(sql);
@@ -65,20 +64,21 @@ public class StudentMsDAO extends MsDAO{
 	public int updateByStudentID(String stuId, String stuName, String deptId, String classId,  String sex, String password, 
 			              float grade, String tel , String intro, String teacherID, String choosedState, String selectDate) {
 		sql = "update TB_Student set StuName='" + stuName + "',DeptId='" + deptId + "',ClassId='" + classId 
-		             + "',sex='" + sex + "',spassword='" + password + "',grade=" + grade + ",intro='" + intro + "',tel='" + tel
-		             + "',teacherID='" + teacherID+ "',choosedState='" + choosedState+ "',selectDate='" + selectDate 
+		             + "',Sex='" + sex + "',SPassword='" + password + "',Grade=" + grade + ",Intro='" + intro + "',Tel='" + tel
+		             + "',TeacherID='" + teacherID+ "',ChoosedState='" + choosedState+ "',SelectDate='" + selectDate 
 		             +"' where StuID='" + stuId+ "'";
 		return updateDB(sql);
 	}
 	// 按照管理员编号查询
     public StudentMsg findByStudentId(String stuId) {
 		sql = "select * from TB_Student where StuID='" + stuId + "'";
+		System.out.println(sql);
 		return getStudentMsg(sql);//返回javaBean
 	}
     
 	//根据学号删除数据
 	public int deleteByStuId(String stuId) {
-		sql = "delete from TB_Student where stuId='" + stuId + "'";
+		sql = "delete from TB_Student where StuId='" + stuId + "'";
 		return updateDB(sql);
 	}
 	

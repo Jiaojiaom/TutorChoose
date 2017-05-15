@@ -39,6 +39,7 @@ public class DeptMsDAO extends MsDAO {
    	 	   sql = "insert into TB_Dept(DeptID, DeptName)"
    				+ "values('"+deptID+"','"+deptName+"')";  
    		}
+   		System.out.println(sql);
    		// 更新数据库
    		return updateDB(sql);
    	}

@@ -35,31 +35,31 @@ public class TeacherMsDAO extends MsDAO {
 		return teacherMs;//返回javaBean
 	}
 	
-	public int addTeacher(String TeacherID,String TeacherName,String DeptID,String Sex,String tel,String Intro){
+	public int addTeacher(String TeacherID,String TeacherName,String DeptID,String Sex,String title,String tel,String Intro){
 		if(findByTeacherID(TeacherID)!=null){
-			String Title=null, TPassword="123456", Privilege=null;
-			int studentCount=0;
-			sql = "update TB_Teacher set TeacherName='" + TeacherName + "',TPassword='" + TPassword + "',DeptID='" + DeptID 
-		             + "',Sex='" + Sex + "',Title='" + Title + "',studentCount=" + studentCount 
-		             + ",Privilege=" + Privilege+ ",tel='" + tel+ "',Intro='" + Intro 
+			System.out.println("更新数据");
+			sql = "update TB_Teacher set TeacherName='" + TeacherName + "',DeptID='" + DeptID 
+		             + "',Sex='" + Sex + "',Title='" + title + "',tel='" + tel+ "',Intro='" + Intro 
 		             +"' where TeacherID='" + TeacherID+ "'";
 		}
 		else {
+			System.out.println("插入数据");
 			// 插入到数据库
-			sql = "insert into TB_Teacher(TeacherID, TeacherName, DeptID, Sex,tel,Intro)"
-					+ "values('"+TeacherID+"','"+TeacherName+"','"+DeptID+"','" +Sex+"','"+tel+"','"+Intro+"')";
+			sql = "insert into TB_Teacher(TeacherID, TeacherName, DeptID, Sex, Title,tel,Intro)"
+					+ "values('"+TeacherID+"','"+TeacherName+"','"+DeptID+"','" + Sex +"','"+"','" +title+"','"+tel+"','"+Intro+"')";
 		}
+		System.out.println(sql);
 		return updateDB(sql);
 	}
 	
-	//根据学号查询教师信息
+	//根据工号查询教师信息
     public TeacherMsg findByTeacherID(String teacherId) {
 		sql = "select * from TB_Teacher where TeacherId='" + teacherId + "'";
 		return getTeacherMsg(sql);//返回javaBean
 	}
     
 	//修改用户数据
-	public int updateByTeacherId(String TeacherID, String TeacherName, String TPassword, String DeptID,  String Sex,
+	public int updateByTeacherId(String TeacherID, String TeacherName, String TPassword, String DeptID, String Sex,
 			              String Title, int studentCount, int Privilege, String tel,String Intro) {
 	
 		sql = "update TB_Teacher set TeacherName='" + TeacherName + "',TPassword='" + TPassword + "',DeptID='" + DeptID 

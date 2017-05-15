@@ -100,16 +100,28 @@ public class LoginServlet extends HttpServlet {
 	    if(exist==false){
 	    	response.setContentType("text/html;charset=UTF-8");	
 			System.out.println("用户不存在，请重新登陆");
-			request.getRequestDispatcher("login.jsp").forward(request, response);
+			response.sendRedirect(request.getContextPath()+"/userLogin/login.jsp");
 	    }else if (confirmPwd.equals(userPwd)) {
 	    	System.out.println("成功登陆");
 	    	HttpSession session = request.getSession();
 			session.setAttribute("username", username);
-	    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+		    switch(userType){
+		       case "studentLogin":
+		    	   response.sendRedirect(request.getContextPath()+"/student/setting.jsp");
+		    	   break;
+		       case "teacherLogin":
+		    	   response.sendRedirect(request.getContextPath()+"/teacher/setting.jsp");
+		    	   break;
+		       case "adminLogin":
+		    	   response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
+		    	   break;
+		       default:
+		    	   break;
+		    }
 		} else {
 			response.setContentType("text/html;charset=UTF-8");	
 			System.out.println("登陆失败， 请再次登陆");
-			request.getRequestDispatcher("login.jsp").forward(request, response);
+			response.sendRedirect(request.getContextPath()+"/userLogin/login.jsp");
 		}
 	}
 }

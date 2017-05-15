@@ -40,6 +40,7 @@ public class AdminMsDAO extends MsDAO {
 	 	   sql = "insert into TB_Admin(AdminID, AdminName, APassword,tel)"
 				+ "values('"+AdminID+"','"+AdminName+"','"+APassword+"','"+tel+"')";  
 		}
+		System.out.println(sql);
 		// 更新数据库
 		return updateDB(sql);
 	}

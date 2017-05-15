@@ -1,43 +1,63 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.net.URLEncoder"%>
+    pageEncoding="UTF-8"%>
+<%@ page import="db.TeacherMsDAO"%>
+<%@ page import="db.StudentMsDAO"%>
+<%@ page import="db.DeptMsDAO"%>
+<%@ page import="db.ClassMsDAO"%>
 <%@ page import="java.util.*"%>
-<%@ page import="db.TeacherMsDAO" %>
-<%@ page import="javabean.TeacherMsg" %>
-<%@ page import="db.StudentMsDAO" %>
-<%@ page import="javabean.StudentMsg" %>
-<%@ page import="db.DeptMsDAO" %>
-<%@ page import="javabean.DeptMsg" %>
-<%@ page import="db.ClassMsDAO" %>
-<%@ page import="javabean.ClassMsg" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="java.text.*"%>
+<!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="lib/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="lib/table.css">
-<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script type="text/javascript" language="javascript" src="lib/jquery.dataTables.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>教师信息列表</title>
+<title>管理员</title>
+<link rel="stylesheet" type="text/css" href="../lib/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css">
+<link rel="stylesheet" href="../lib/sweetalert.css">
+<link rel="stylesheet" type="text/css" href="../lib/table.css">
+<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
+</script>
+<script type="text/javascript" language="javascript" src="../lib/sweetalert-dev.js"></script>
+<script type="text/javascript" language="javascript" src="../lib/jquery.dataTables.min.js">
+</script>
+<style type="text/css">
+	body{
+		margin: 0;
+		padding: 0;
+		display:flex;
+		flex-direction: column;
+		height: 100vh; 
+		width:100%;
+	}
+	.main{
+		display: flex;
+		flex-direction: column;
+		width: 90%;
+		margin-left: 2%;
+		padding: 10px;
+	}
+	.main table{
+		width: 98%;
+	}
+	.nav{
+		margin-top: 50px;
+		line-height:40px;
+		font-size:10px;
+		align-self: flex-start;
+		margin-left:2%;
+	}
+</style>
+
 </head>
 <body>
+    <%@ include file="../public/navbar.html" %>
+	<span class="nav">管理员端>>信息中心</span>
+	<div class="main">
 	<%
 		if (request.getAttribute("result") != null) { //判断保存在request范围内的对象是否为空
 			out.println("<script >alert('" + request.getAttribute("result")
 					+ "');</script>"); //页面显示提示信息    	
 		}
-	%>
-	<% 
-	if(session.getAttribute("username")==null){
-	%>	
-	  <a class="btn btn-primary" href="register.jsp">注册</a>&nbsp; &nbsp;<a class="btn btn-primary" href="login.jsp">登陆</a>
-	<%
-	}else{
-	%>
-	  <p>欢迎你， <%=session.getAttribute("username") %>, <a href="logout.jsp">登出</a></p>
-	  <p><a href="addInfo.jsp">添加单条数据</a></p>
-	<%
-	}
 	%>
 	<div id="teacherListForm">
 	    <h2>教师列表</h2>
@@ -47,6 +67,7 @@
 			<input type="submit" name="Submit" value="导入教师信息" /> 
 			<input type="reset" name="Submit2" value="重置" />
 		</form>
+		<a href='exportData?datatype=teacher'>导出教师</a>
 		<table id="teacher" class="display" cellspacing="0" width="100%">
 		  <thead>
 			<tr>
@@ -75,6 +96,7 @@
 			<input type="submit" name="Submit" value="导入学生信息" /> 
 			<input type="reset" name="Submit2" value="重置" />
     	</form>
+    	<a href='exportData?datatype=student'>导出学生</a>
 		<table id="student" class="display" cellspacing="0" width="100%">
 		  <thead>
 			<th>学号</th>
@@ -102,6 +124,7 @@
 		 <input type="submit" name="Submit" value="导入系信息" /> 
 		 <input type="reset" name="Submit2" value="重置" />
 	    </form>
+	    <a href='exportData?datatype=dept'>导出系</a>
 		<table id="dept" class="display" cellspacing="0" width="100%">
 		  <thead>
 			<th>系编号</th>
@@ -119,6 +142,7 @@
 			<input type="submit" name="Submit" value="导入班级信息" /> 
 			<input type="reset" name="Submit2" value="重置" />
 	   </form>
+	   <a href='exportData?datatype=class'>导出班级</a>
 		<table id="class" class="display" cellspacing="0" width="100%">
 		  <thead>
 			<th>班级编号</th>
@@ -127,6 +151,7 @@
 			<th>删除</th>
 		</table>
 	</div>
+  </div>
 </body>
 <script type="text/javascript">
 	/*获取表格中的数据*/
@@ -233,7 +258,7 @@
 	ArrayList<Map<String, String>> classMsgs = classDao.queryClassAll();
 	for (Map<String, String> classMsg : classMsgs) {
 		String  viewClass = "<a href='classDetail.jsp?classid="+classMsg.get("classid")+"'>"+classMsg.get("classname")+"</a>";
-		String  editClass = "<a href='editClassInfo.jsp?classid="+classMsg.get("classsid")+"'>编辑</a>";
+		String  editClass = "<a href='editClassInfo.jsp?classid="+classMsg.get("classid")+"'>编辑</a>";
 		String  deleteClass = "<a href='deleteInfo.jsp?dataType=class&id="+classMsg.get("classid")+"'>删除</a>";
 	%>
 		var n = new Array(4);

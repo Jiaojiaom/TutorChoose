@@ -25,4 +25,4 @@
    }
 %>
 
-<jsp:forward page="dataList.jsp" />
+<jsp:forward page="homepage.jsp" />

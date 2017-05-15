@@ -65,7 +65,7 @@ public class UpdateInfoServlet extends HttpServlet {
 		        teacherDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改教师"+TeacherName+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -94,7 +94,7 @@ public class UpdateInfoServlet extends HttpServlet {
 		        stuDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改学生"+stuName+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -109,7 +109,7 @@ public class UpdateInfoServlet extends HttpServlet {
 		        deptDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改系"+deptName+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
@@ -125,7 +125,7 @@ public class UpdateInfoServlet extends HttpServlet {
 		        classDao.close();
 			    if (i > 0) {
 			    	System.out.println("成功修改班级"+className+"的信息");
-			    	request.getRequestDispatcher("dataList.jsp").forward(request, response);
+			    	response.sendRedirect(request.getContextPath()+"/admin/homepage.jsp");
 				} else {
 					response.setContentType("text/html;charset=UTF-8");	
 					System.out.println("数据插入失败");
