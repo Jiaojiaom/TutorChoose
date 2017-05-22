@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-import javabean.DeptMsg;
-import javabean.SelectTeacherMsg;
+import com.bean.DeptMsg;
+import com.bean.SelectTeacherMsg;
 
 public class DeptMsDAO extends MsDAO {
 	// 查询得到详细信息
@@ -39,7 +39,7 @@ public class DeptMsDAO extends MsDAO {
    	 	   sql = "insert into TB_Dept(DeptID, DeptName)"
    				+ "values('"+deptID+"','"+deptName+"')";  
    		}
-   		System.out.println(sql);
+//   		System.out.println(sql);
    		// 更新数据库
    		return updateDB(sql);
    	}
@@ -58,7 +58,7 @@ public class DeptMsDAO extends MsDAO {
 	
     // 修改系
 	public int updateByDeptId(String deptID, String deptName) {
-		sql = "update TB_SelectTeacher set DeptName='" + deptName +"'where TeacherID='" + deptID+ "'";
+		sql = "update TB_Dept set DeptName='" + deptName +"'where DeptID='" + deptID+ "'";
 		return updateDB(sql);
 	}
 	
@@ -73,6 +73,20 @@ public class DeptMsDAO extends MsDAO {
 		sql="select * from TB_Dept";
 		return queryDBForList(sql);
 	}
-
+	public String getDeptName(String DeptID) throws SQLException{
+		sql = "select DeptName from TB_Dept where DeptID = "+ DeptID;
+		String DeptName = "";
+		ResultSet rs = dbCon.queryForRS(sql);
+		if (rs != null) {
+			try {
+				if (rs.next()) {
+					DeptName = rs.getString("DeptName");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return DeptName;
+	}
 }
 

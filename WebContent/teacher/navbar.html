@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>导航栏</title>
+<style type="text/css">
+	body{
+	margin: 0;
+	padding: 0;
+	background: #f1f2f4;
+	width: 100%;
+	height: 120vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+nav{
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    z-index: 20;
+    overflow: hidden;
+    background-color: rgba(255,255,255,.90);
+    border-bottom: 1px solid rgba(30,35,42,.06);
+    box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);
+}
+nav header{
+	display: flex;
+	align-items: center;
+}
+nav header .logo{
+	color: #38b7ea;
+    width: 10%;
+    text-align: center;
+    font-size: 25px;
+	font-weight: 500;
+}
+nav header .menu{
+	width: 20%;
+	margin-left: 20px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+nav header .menu a{
+    color: #8590a6;
+    text-decoration: none;
+}
+nav header .menu a:hover{
+    color: #03A9F4;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+	<nav>
+		<header>
+				<div class="logo">
+					TutorSEL
+				</div>
+				<div class="menu">
+					<a href="homepage.jsp">学生列表</a>
+					<a href="setting.jsp">个人设置</a>
+				</div>
+			</header>
+	</nav>
+</body>
+</html>

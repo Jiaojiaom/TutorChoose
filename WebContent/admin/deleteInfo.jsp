@@ -23,6 +23,6 @@
 	   classDao.deleteByClassId(id);
 	   classDao.close();
    }
+   session.setAttribute("clickType", deleteType);
+   response.sendRedirect("homepage.jsp");
 %>
-
-<jsp:forward page="homepage.jsp" />

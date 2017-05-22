@@ -22,7 +22,10 @@ CREATE TABLE TB_Admin
 ( AdminID VARCHAR(16) PRIMARY KEY,
   AdminName VARCHAR(30),                                                          
   APassword VARCHAR(16) NOT NULL DEFAULT "123456",
-  tel VARCHAR(13)
+  tel VARCHAR(13),
+  PrivilegeModel VARCHAR(3) NOT NULL DEFAULT "off",
+  AuthorityModel VARCHAR(3) NOT NULL DEFAULT "off",
+  LimitModel VARCHAR(3) NOT NULL DEFAULT "off"
 ); 
 
 /* 老师 */
@@ -34,7 +37,7 @@ CREATE TABLE TB_Teacher
   Sex VARCHAR(1) NOT NULL DEFAULT 'M',  
   Title VARCHAR(10) NOT NULL  DEFAULT '副教授',
   studentCount INTEGER NOT NULL DEFAULT 5 , 
-  Privilege INTEGER NOT NULL DEFAULT '0'  ,
+  Privilege INTEGER NOT NULL DEFAULT 3  ,
   tel VARCHAR(13),
   Intro TEXT
 );

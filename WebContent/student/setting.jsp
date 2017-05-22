@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="db.*"%>
+<%@ page import="java.util.*"%>
 <!DOCTYPE html >
 <html>
 <head>
@@ -7,68 +9,155 @@
 <title>个人信息</title>
 <link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css">
 <link rel="stylesheet" href="../lib/sweetalert.css">
-<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
-</script>
+<script type="text/javascript" language="javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" language="javascript" src="../lib/sweetalert-dev.js"></script>
+<script src="../lib/modal.js"></script>
 </head>
 <body>
-	<%@ include file="../public/navbar.html" %>
+	<%@ include file="navbar.jsp" %>
+	<%
+	request.setCharacterEncoding("utf-8");
+	HttpSession s = request.getSession(); 
+	if(s.getAttribute("stuId") != null){
+	String stuId = (String)s.getAttribute("stuId");
+	StudentDAO so = new StudentDAO();
+	Map<String,String> ot = so.studentInfo(stuId);
+	//System.out.println(ot);
+	//学生学号，学生姓名，学生班级，学生性别，学生成绩，学生简介，导师工号（可能为null），联系方式
+	String sex = null;
+	String teacher = null;
+	String choosedState = null;
+	if(ot.get("sex").equals("M")){
+		sex = "男";
+	}
+	else sex = "女";
+	//如果导师存在显示导师姓名
+	if(ot.get("teacherid") != null && ot.get("teacherid").length() > 0){
+		teacher = so.getTeacherName(ot.get("teacherid"));
+	}
+	else teacher = "无";
+	//选择情况
+	if(ot.get("choosedstate").equals("0")){
+		choosedState = "未选择导师";
+	}else if(ot.get("choosedstate").equals("1")){
+		choosedState = "导师待定";
+	}else if(ot.get("choosedstate").equals("2")){
+		choosedState = "淘汰";
+	}else{
+		choosedState = "选择成功";
+	}
+	%>
+	
+	<form action="ChangePwd" method="post" class="form-horizontal" onsubmit="return checkPwd()">
+		<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		    <div class="modal-dialog" style="margin-top: 120px">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		                <h4 class="modal-title" id="changePasswordModal">修改密码</h4>
+		            </div>
+		            <div class="modal-body">
+			            <div class="form-group">
+						    <label class="col-sm-4 control-label">原密码：</label>
+						    <div class="col-sm-7">
+    							<input type="password" class="form-control" id="oldpw" placeholder="请填写原密码" name="oldPassword">
+    						</div>
+						</div>
+						<div class="form-group">
+						    <label class="col-sm-4 control-label">新密码：</label>
+						    <div class="col-sm-7">
+    							<input type="password" class="form-control" id="newpw" placeholder="请填写新密码" name="newPassword">
+    						</div>
+						</div>
+						<div class="form-group">
+						    <label class="col-sm-4 control-label">重复新密码：</label>
+						    <div class="col-sm-7">
+    							<input type="password" class="form-control" id="reNewpw" placeholder="请重复新密码" name="reNewPassword">
+    						</div>
+						</div>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		                <button type="submit" class="btn btn-primary">确定</button>
+		            </div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal-dialog -->
+		</div>
+	</form>
+	
 	<span class="nav">学生端>>个人信息中心</span>
 	<div class="main">
-		<form action="studentInfo" method="post" style="width: 100%">
-				<div class="panel" style="width: 50%">
+		<form action="ChangePwd" method="post" style="width: 100%">
+			<div style="display: flex;flex-direction: row;width: 100%">
+				<div class="panel" style="width: 40%">
 					<table style="width: 100%">
 						<tr>
 							<td>
 								姓名
 							</td>
-					    	<td><input type="text" value="XX" disabled></td>
+					    	<td><input type="text" value="<%=ot.get("stuname")%>" disabled></td>
 						</tr>
 						<tr>
 							<td>
 								性别
 							</td>
-					    	<td><input type="text" placeholder="请填写性别" value="XX" id="teacherSex" name="teacherSex"></td>
+					    	<td><input type="text" placeholder="请填写性别" value="<%=sex%>" id="teacherSex" name="teacherSex"disabled></td>
 						</tr>
 						<tr>
 							<td>
 								学号
 							</td>
-					    	<td><input type="text" value="XXXX" disabled></td>
+					    	<td><input type="text" value="<%=ot.get("stuid")%>" disabled></td>
 						</tr>
 						<tr>
 							<td>
 								专业
 							</td>
-					    	<td><input type="text" value="XXXX" disabled></td>
+					    	<td><input type="text" value="<%=ot.get("deptname")%>" disabled></td>
 						</tr>
 						<tr>
 							<td>
 								班级
 							</td>
-					    	<td><input type="text" value="XXXX" disabled></td>
+					    	<td><input type="text" value="<%=ot.get("classname")%>" disabled></td>
 						</tr>
 						<tr>
 							<td>
 								电话号码
 							</td>
-					    	<td><input type="text" placeholder="请填写电话号码" value="XXX" id="teacherTel" name="teacherTel"></td>
+					    	<td><input type="text" placeholder="请填写电话号码" value="<%=ot.get("tel")%>" id="teacherTel" name="studentTel"></td>
 						</tr>
 						<tr>
 							<td>
 								选择导师
 							</td>
-					    	<td><input type="text"  value="XXX" id="teacherTel" name="selTeacher"></td>
+					    	<td><input type="text"  value="<%=teacher%>" id="teacherTel" name="selTeacher"disabled></td>
+						</tr>
+						<tr>
+							<td>
+								当前状态
+							</td>
+					    	<td><input type="text"  value="<%=choosedState%>" id="states" name="states"disabled></td>
 						</tr>
 					</table>
 				</div>
-
+			<div style="width: 60%;margin: 10px">
+					<h5>个人简介</h5>
+					<textarea rows="20" class="mb-lg form-control" id="teacherIntro" name="studentIntro"><%=ot.get("intro")%></textarea>
+				</div>
+			</div>
 			<div style="text-align: center">
 				<button type="submit" class="btn btn-primary">保存个人信息</button>
-				<button type="button" class="btn btn-danger" onclick="changePassword()">修改密码 </button>
+				<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#changePasswordModal">修改密码 </button>
 			</div>
 		</form>
 	</div>
+	<%
+	}
+	else{
+		//返回登录页面
+		response.sendRedirect("../login.jsp");
+	} %>
 </body>
 <style type="text/css">
 	body{
@@ -77,6 +166,7 @@
 		display:flex;
 		flex-direction: column;
 		height: 100vh; 
+		overflow-y: scroll;
 	}
 	.main{
 		display: flex;
@@ -107,14 +197,6 @@
     	border-radius: 4px;
     	background-color: hsla(0,0%,71%,.1);
 	}
-	.main form{
-		display:flex;
-    	flex-direction: column;
-   		align-items: center;
-   		display: flex;
-    	justify-content: space-around;
-    	height: 90vh;
-	}
 	.nav{
 		margin-top: 50px;
 		line-height:40px;
@@ -143,22 +225,13 @@
     	border-radius: 4px;
     	background-color: hsla(0,0%,71%,.1);
 	}
-	.sweet-alert .alertInput input {
-		display: block;
-		float: left;
-		width: 60%;
-	}
-	.alertInput label span {
-		float: left;
-		width: 40%;
-		margin: 17px 0;
-	}
 </style>
 <script type="text/javascript" language="javascript">
 	/*获取从servlet返回的信息，显示成功或失败*/
 	<%
-	String result = (String)request.getAttribute("result");
-	String isError = (String)request.getAttribute("isError");
+	String result = (String)s.getAttribute("result");
+	String isError = (String)s.getAttribute("isError");
+	//System.out.println(result + isError);
 	if(result != null) {
 		if(isError.equals("0")) {
 	%>
@@ -166,28 +239,26 @@
 	<%  } else {%>
 			swal("失败", "<%=result%>", "error");
 	<%	}
+		s.removeAttribute("result");
+		s.removeAttribute("isError");
 	} %>
-	
-	/*修改密码事件*/
-	function changePassword() {
-		swal({
-		 	title: "",
-		 	html: true,
-		  	text: "<form action='teacherInfo' method='post'><div class='alertInput'><label><span>原密码：</span><input type='text' placeholder='请填写原密码' id='oldpw' name='oldPassword'/></label>"+
-		  		"<label><span>新密码：</span><input type='text' placeholder='请填写新密码' id='newpw' name='newPassword'/></label>"+
-		  		"<label><span>重复新密码：</span><input type='text' placeholder='请重复新密码' id='reNewpw' name='reNewPassword'/></label></div>"+
-		  		"<button class='cancel' type='button'>取消</button><button class='confirm' type='submit' style='background-color: rgb(221, 107, 85);'>确定</button></form>",
-		  	showConfirmButton: false,
-		  	showCancelButton: false,
-		  	confirmButtonColor: "#DD6B55",
-		  	confirmButtonText: "确定",
-		  	cancelButtonText: "取消",
-		  	closeOnConfirm: false,
-		  	closeOnCancel: true
-		},
-		function(isConfirm){
-			
-		});
+	$(function() {
+	    $('#changePasswordModal').modal('hide');
+	});
+	function checkPwd(){
+		var oldPwd = $('#oldpw').val();
+		var old = <%=(String)s.getAttribute("stuPwd")%>;
+		if(oldPwd != <%=s.getAttribute("stuPwd")%>){
+			alert("旧密码错误！");
+			return false;
+		}
+		var newPwd = $('#newpw').val();
+		var reNewPwd = $('#reNewpw').val();
+		if(newPwd == "" || newPwd != reNewPwd){
+			alert("两次输入密码不相同！");
+			return false;
+		}
+		return true;
 	}
 </script>
 </html>

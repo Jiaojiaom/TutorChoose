@@ -1,78 +1,75 @@
 package db;
-import java.io.InputStream;
-import java.sql.Connection;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import  java.util.Properties;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
+import  java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import  java.io.IOException; 
 
-public class DBConnection {
-	private String driver="com.mysql.jdbc.Driver";
-	private String url= "jdbc:mysql://127.0.0.1:3306/info?characterEncoding=utf8";
-	private String username;
-	private String password;
-	
-	private Connection con=null;
-	private Statement stmt=null; 
-	private ResultSet rs=null; 
-	
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	//构造函数
+public class DBConnection implements java.io.Serializable{
+	private String driver;
+	private String url;
+	private String user;
+	private String pwd;
+	private Connection con;
+	private Statement stmt;
+	private ResultSet rs;
+
+	/**
+	 * DBConnection构造函从参数文件中读取数据库连接参数
+	 */
 	public DBConnection(){
-		Properties prop = new Properties();  
-		try {  
-			//读入流读取文件
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("db.properties");  
-            prop.load(is);
-            //设置字段
-            this.setDriver(prop.getProperty("driver"));
-            this.setUrl(prop.getProperty("url"));
-            this.setUsername(prop.getProperty("username"));
-            this.setPassword(prop.getProperty("password"));
-            
-            if (is != null)  
-                is.close();  //关闭文件读取流
-        } catch (Exception e) {  
-            System.out.println(e + " file db.properties not found");  
-        }
+		//从properties文件中读取数据库连接参数
+		Properties prop =  new  Properties();
+		try  {
+			InputStream in = getClass().getResourceAsStream("/db.properties");
+            prop.load(in);    
+            this.setDriver(prop.getProperty( "driver" ));    
+            this.setUrl(prop.getProperty( "url" ));
+            this.setUser(prop.getProperty( "username" ));
+            this.setPwd(prop.getProperty( "password" ));
+            if(in != null)  in.close();  
+        }  catch  (IOException e) {    
+            e.printStackTrace();    
+        }  
+		
 	}
 	
-	//创建连接
+	/**
+	 * createConnection函数连接数据库
+	 */
 	public void createConnection(){
-		try {
+		try{
 			Class.forName(driver);
-		} catch (ClassNotFoundException e) {
+			con = (Connection) DriverManager.getConnection(url,user,pwd);
+			//System.out.println("success");
+		}catch (ClassNotFoundException e) {
+			//System.out.println("fail");
 			e.printStackTrace();
-		}
-		
-		try {
-			con=DriverManager.getConnection(url,username,password);
-//			System.out.println("成功建立连接");
 		} catch (SQLException e) {
+			//System.out.println("fail");
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * queryForRS函数从数据库中查询记录，得到相应的结果集
+	 * @param sql:数据库查询语句
+	 * @return 查询到的结果集
+	 */
 	public ResultSet queryForRS(String sql){
 		ResultSet rs=null;
 		try{
-			stmt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			stmt=(Statement) con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			rs=stmt.executeQuery(sql);
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -81,40 +78,47 @@ public class DBConnection {
 	}
 	
 	//执行查询
+	/**
+	 * queryForList函数从数据库中查询记录，得到相应的结果集，把结果集中的数据封装到ArrayList类型中
+	 * @param sql：数据库查询语句
+	 * @return 把结果集中的数据封装到ArrayList类型，返回ArrayList类型变量
+	 */
 	public  ArrayList<Map<String,String>> queryForList(String sql){
 		ArrayList<Map<String,String>> results=null;
 		try {
-			stmt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-			//执行sql语句
+			stmt=(Statement) con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			rs=stmt.executeQuery(sql);
-			//遍历结果集
 			if(rs!=null){
-				results=new ArrayList<Map<String,String>>(); //初始化
+				results=new ArrayList<Map<String,String>>();
 				while(rs.next()){
 					Map<String,String> result=new HashMap<String,String>();
 					ResultSetMetaData rsmd=rs.getMetaData();
-					int columnCount=rsmd.getColumnCount(); //得到行数
+					int columnCount=rsmd.getColumnCount();
 					for(int i=1;i<=columnCount;i++){
-						String key=rsmd.getColumnName(i).toLowerCase();//得到字段名
-						String value=rs.getString(i);//得到对应的值
-						result.put(key, value);//构件为一个Map类型
+						String fieldName=rsmd.getColumnName(i).toLowerCase();
+						String fieldValue=rs.getString(i);
+						result.put(fieldName, fieldValue);
 					}
-					results.add(result);//添加到结果集
+					results.add(result);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return results;
 	}
-		
-		
-	//执行更新类的SQL语句
+	
+	
+	/**
+	 * update函数执行更新类的SQL语句：insert,update,delete
+	 * @param sql:数据库查询语句
+	 * @return 数据库更新记录的数量
+	 */
 	public int update(String sql){
 		int i=0;
 		try {
-			stmt=con.createStatement();
-			//执行更新sql语句
+			stmt=(Statement) con.createStatement();
 			i=stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -122,17 +126,101 @@ public class DBConnection {
 		return i;
 	}
 	
-	//关闭连接
+	/**
+	 * setsetAutoCommit函数用来设置数据库是否自动提交事务
+	 * @param flag:数据库是否自动提交事务（false:禁止自动提交，true:自动提交）
+	 * @throws SQLException 
+	 */
+	public void setAutoCommit(boolean flag) throws SQLException{
+		con.setAutoCommit(flag);
+	}
+	
+	/**
+	 * setCommit函数用来统一提交事务
+	 * @throws SQLException
+	 */
+	public void setCommit() throws SQLException{
+		con.commit();
+	}
+	
+	/**
+	 * setRollback函数用来撤销事务
+	 */
+	public void setRollback(){
+		try {
+			con.rollback();
+		} catch (SQLException e) {
+			System.out.println("回滚失败！");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 *closeConnection函数关闭数据库连接 
+	 */
 	public void close(){
 		try {
 			if(rs!=null) rs.close();
 			if(stmt!=null) stmt.close();
 			if(con!=null) con.close();
-//			System.out.println("成功关闭连接");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-		
 	
+	public String getDriver() {
+		return driver;
+	}
+
+	public void setDriver(String driver) {
+		this.driver = driver;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
+	public Connection getCon() {
+		return con;
+	}
+
+	public void setCon(Connection con) {
+		this.con = con;
+	}
+
+	public Statement getStmt() {
+		return stmt;
+	}
+
+	public void setStmt(Statement stmt) {
+		this.stmt = stmt;
+	}
+
+	public ResultSet getRs() {
+		return rs;
+	}
+
+	public void setRs(ResultSet rs) {
+		this.rs = rs;
+	}
 }
